@@ -47,15 +47,21 @@ export default {
   created() {
     this.getHomeMultidata()
 
-    getHomeGoods('pop',1).then(res =>{
-      console.log(res);
-    })
+    this.getHomeGoods('pop')
+    this.getHomeGoods('new')
+    this.getHomeGoods('sell')
   },
   methods:{
     getHomeMultidata(){
       getHomeMultidata().then(res =>{
         this.banner = res.data.banner.list;
         this.recommends = res.data.recommend.list;
+      })
+    },
+    getHomeGoods(type){
+      const page = this.goods[type].page+1;
+      getHomeGoods(type,page).then(res =>{
+        res.data
       })
     }
   }
