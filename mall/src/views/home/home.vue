@@ -1,18 +1,23 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
-    <p>我是首页</p>
+    <homeswiper :data="banner"></homeswiper>
+    <home-recommend-view :recommends="recommends"></home-recommend-view>
   </div>
 </template>
 
 <script>
 import NavBar from "@/components/common/navbar/NavBar";
 import {getHomeMultidata} from "@/network/home";
+import homeswiper from "@/views/home/childcomps/homeswiper";
+import homeRecommendView from "@/views/home/childcomps/homeRecommendView";
 
 export default {
   name: "home",
   components: {
-    NavBar
+    NavBar,
+    homeswiper,
+    homeRecommendView
   },
   data() {
     return{
@@ -23,7 +28,7 @@ export default {
   created() {
     getHomeMultidata().then(res =>{
       this.banner = res.data.banner.list;
-      this.recommends = res.data.recommends.list;
+      this.recommends = res.data.recommend.list;
     })
   }
 
