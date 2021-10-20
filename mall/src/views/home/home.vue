@@ -1,11 +1,19 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
-    <homeswiper :data="banner"></homeswiper>
-    <home-recommend-view :recommends="recommends"></home-recommend-view>
-    <feature-view></feature-view>
-    <tab-control class="tab-control" :title="['流行','新款','精选']" @tabClick="tabclick"></tab-control>
-    <goods :goods="showgoods"></goods>
+    <Scroll class="contents"
+            ref="scroll"
+            :probe-type="3"
+            :pull-up-load="true"
+            @scroll="contentscroll"
+            @pullingUp="loadmore">
+      <homeswiper :data="banner"></homeswiper>
+      <home-recommend-view :recommends="recommends"></home-recommend-view>
+      <feature-view></feature-view>
+      <tab-control class="tab-control" :title="['流行','新款','精选']" @tabClick="tabclick"></tab-control>
+      <goods :goods="showgoods"></goods>
+    </Scroll>
+    <backtop @click.native="backclick" v-show="isshow"></backtop>
   </div>
 </template>
 
@@ -14,12 +22,17 @@ import homeswiper from "@/views/home/childcomps/homeswiper";
 import homeRecommendView from "@/views/home/childcomps/homeRecommendView";
 import FeatureView from "@/views/home/childcomps/FeatureView";
 
+
+import backtop from "@/components/content/backtop/backtop";
 import NavBar from "@/components/common/navbar/NavBar";
 import TabControl from "@/components/content/tabControl/TabControl";
 import goods from "@/components/content/goods/goods";
+import Scroll from "@/components/common/scroll/Scroll";
 
 import {getHomeMultidata,getHomeGoods} from "@/network/home";
 import Goods from "@/components/content/goods/goods";
+
+
 
 export default {
   name: "home",
@@ -30,7 +43,9 @@ export default {
     homeRecommendView,
     FeatureView,
     TabControl,
-    goods
+    goods,
+    Scroll,
+    backtop
   },
   data() {
     return{
@@ -41,7 +56,8 @@ export default {
         'new':{page: 0,list:[]},
         'sell':{page: 0,list:[]},
       },
-      currentType:'pop'
+      currentType:'pop',
+      isshow: false
     }
   },
   computed: {
@@ -70,7 +86,13 @@ export default {
           break
       }
     },
-
+    backclick(){
+      this.$refs.scroll.scroll.scrollTo(0,0,500)
+    },
+    contentscroll(position){
+      this.isshow = (-position.y) > 500;
+      // this.isTabShow = (-position.y) > this.tabOffsetTop;
+    },
 
 
     /*数据请求*/
@@ -86,6 +108,10 @@ export default {
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page += 1;
       })
+    },
+    loadmore(){
+      this.getHomegoods(this.currentType);
+      this.$refs.scroll.finishPullup();
     }
   }
 }
@@ -93,7 +119,8 @@ export default {
 
 <style scoped>
 #home{
-  padding-top:44px ;
+  position: relative;
+  height: 100vh;
 }
 
 .home-nav{
@@ -104,13 +131,20 @@ export default {
   left: 0;
   right: 0;
   top: 0;
-  bottom: 0;
   z-index: 9;
 
 }
 .tab-control{
-  position: sticky;
+  position: relative;
   top: 44px;
   z-index: 9;
+}
+.contents{
+  position: absolute;
+  overflow: hidden;
+  top:44px ;
+  left: 0;
+  right: 0;
+  bottom: 49px;
 }
 </style>

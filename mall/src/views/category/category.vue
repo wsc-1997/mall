@@ -1,10 +1,11 @@
 <template>
-  <p>我是category</p>
+
 </template>
 
 <script>
 export default {
-  name: "category"
+  name: "category",
+
 }
 </script>
 
