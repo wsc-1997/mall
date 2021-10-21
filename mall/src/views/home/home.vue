@@ -1,16 +1,23 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
+    <tab-control class="tab-control"
+                 :title="['流行','新款','精选']"
+                 @tabClick="tabclick"
+                 ref="tabcontrol1"
+                 v-show="istabshow"></tab-control>
     <Scroll class="contents"
             ref="scroll"
             :probe-type="3"
             :pull-up-load="true"
             @scroll="contentscroll"
             @pullingUp="loadmore">
-      <homeswiper :data="banner"></homeswiper>
+      <homeswiper :data="banner" @load="swiperomgload"></homeswiper>
       <home-recommend-view :recommends="recommends"></home-recommend-view>
       <feature-view></feature-view>
-      <tab-control class="tab-control" :title="['流行','新款','精选']" @tabClick="tabclick"></tab-control>
+      <tab-control :title="['流行','新款','精选']"
+                   @tabClick="tabclick"
+                   ref="tabcontrol2"></tab-control>
       <goods :goods="showgoods"></goods>
     </Scroll>
     <backtop @click.native="backclick" v-show="isshow"></backtop>
@@ -57,13 +64,23 @@ export default {
         'sell':{page: 0,list:[]},
       },
       currentType:'pop',
-      isshow: false
+      isshow: false,
+      taboffsettop: 0,
+      istabshow: false,
+      saveY: 0
     }
   },
   computed: {
     showgoods(){
       return this.goods[this.currentType].list
     }
+  },
+  activated() {
+    this.$refs.scroll.scroll.refresh()
+    this.$refs.scroll.scroll.scrollTo(0,this.saveY,0)
+  },
+  deactivated() {
+    this.saveY = this.$refs.scroll.scroll.y
   },
   created() {
     this.getHomeMultidata()
@@ -85,13 +102,15 @@ export default {
           this.currentType = 'sell'
           break
       }
+      this.$refs.tabcontrol1.currentIndex = index
+      this.$refs.tabcontrol2.currentIndex = index
     },
     backclick(){
       this.$refs.scroll.scroll.scrollTo(0,0,500)
     },
     contentscroll(position){
       this.isshow = (-position.y) > 500;
-      // this.isTabShow = (-position.y) > this.tabOffsetTop;
+      this.istabshow = (-position.y) > this.taboffsettop;
     },
 
 
@@ -112,6 +131,9 @@ export default {
     loadmore(){
       this.getHomegoods(this.currentType);
       this.$refs.scroll.finishPullup();
+    },
+    swiperomgload(){
+      this.taboffsettop = this.$refs.tabcontrol2.$el.offsetTop;
     }
   }
 }
@@ -127,16 +149,15 @@ export default {
   background-color: var(--color-text);
   color: #fff;
 
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  z-index: 9;
+  /*position: fixed;*/
+  /*left: 0;*/
+  /*right: 0;*/
+  /*top: 0;*/
+  /*z-index: 9;*/
 
 }
 .tab-control{
   position: relative;
-  top: 44px;
   z-index: 9;
 }
 .contents{
@@ -146,5 +167,8 @@ export default {
   left: 0;
   right: 0;
   bottom: 49px;
+}
+.tableshow{
+
 }
 </style>

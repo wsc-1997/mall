@@ -1,8 +1,8 @@
 <template>
   <swiper :interval="interval">
-    <swiper-item v-for="item in data" >
+    <swiper-item v-for="(item, index) in data" :key="index" >
       <a :href="item.link">
-        <img :src="item.image" alt="">
+        <img :src="item.image" alt="" @load="imageload" >
       </a>
     </swiper-item>
   </swiper>
@@ -27,8 +27,17 @@ export default {
   data(){
     return{
       interval:3000,
+      isload:false
+    }
+  },
+  methods:{
+    imageload(){
+      if(!this.isload){
+        this.$emit('load')
+        this.isload = !this.isload
+      }
+    }
   }
-}
 }
 </script>
 

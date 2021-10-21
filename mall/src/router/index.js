@@ -1,39 +1,46 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import home from "@/views/home/home";
-import category from "@/views/category/category";
-import sort from "@/views/sort/sort";
-import cart from "@/views/cart/cart";
-import my from "@/views/my/my";
+
+
+const home = () => import('../views/home/home')
+const sort = () => import('../views/sort/sort')
+const cart = () => import('../views/cart/cart')
+const my = () => import('../views/my/my')
+const Detail = () => import('../views/detail/Detail')
 
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path:'',
+    path:'/',
     redirect:'/home'
   },
   {
     path:'/home',
+    name:'home',
     component:home
   },
   {
-    path:'/category',
-    component: category
-  },
-  {
     path:'/sort',
+    name:'sort',
     component: sort
   },
   {
     path:'/cart',
+    name:'cart',
     component: cart
   },
   {
     path:'/my',
+    name:'my',
     component: my
-  }
+  },
+  {
+    path:'/detail/:iid',
+    name:'Detail',
+    component: Detail
+  },
 
 ]
 
