@@ -9,7 +9,13 @@ export function getDetail(iid){
   })
 }
 
-export class goods {
+export function getrecommend(){
+  return request({
+    url:'recommend'
+  })
+}
+
+export class goodsinfo {
   constructor(itemInfo,columns,shopInfo) {
     this.title = itemInfo.title
     this.desc = itemInfo.desc
@@ -21,3 +27,21 @@ export class goods {
     this.realprice = itemInfo.lowNowPrice
   }
 }
+
+export class info {
+  constructor(shopInfo) {
+    this.shoplogo = shopInfo.shopLogo;
+    this.name = shopInfo.name;
+    this.score = shopInfo.score;
+    this.cSells = shopInfo.cSells;
+    this.cGoods = shopInfo.cGoods;
+  }
+}
+
+export class param {
+  constructor(info, rule) {
+    this.info = info.set;
+    this.rule = rule.tables;
+  }
+}
+

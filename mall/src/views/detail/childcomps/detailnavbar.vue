@@ -1,7 +1,7 @@
 <template>
   <nav-bar>
     <div slot="left" class="left" @click="backclick">
-      <img src="src/assets/images/fanhui.png">
+      <img src="../../..//assets/images/fanhui.png" width="15px" height="15px">
     </div>
     <div slot="center" class="title">
       <div v-for="(item, index) in title"
@@ -31,7 +31,7 @@ export default {
   methods:{
     titleclick(index){
       this.currentIndex = index
-      // this.$emit('titleclick',index)
+      this.$emit('titleclick',index)
     },
     backclick() {
       this.$router.back()
@@ -42,7 +42,7 @@ export default {
 
 <style scoped>
 .left{
-  background-color: red;
+  color: #000;
 }
 .title{
   display: flex;

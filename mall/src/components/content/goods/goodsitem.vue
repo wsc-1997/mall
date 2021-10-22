@@ -1,6 +1,6 @@
 <template>
   <div class="goodsitem" @click="itemclick">
-    <img class="img" :src="goodsitem.show.img" alt="">
+    <img class="img" :src="showimage" alt="">
     <div>
       <p>{{ goodsitem.title }}</p>
       <span class="price">{{ goodsitem.price }}</span>
@@ -23,7 +23,15 @@ export default {
   },
   methods:{
     itemclick() {
-      this.$router.push('/Detail/' + this.goodsitem.iid)
+      this.$router.push('/Detail/' + this.id)
+    }
+  },
+  computed:{
+    showimage(){
+      return this.goodsitem.image || this.goodsitem.show.img
+    },
+    id(){
+      return this.goodsitem.iid || this.goodsitem.item_id
     }
   }
 }
