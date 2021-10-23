@@ -15,6 +15,7 @@
       <goods :goods="recommends"  ref="recommend"></goods>
     </Scroll>
     <backtop @click.native="backTop" v-show="isShowBackTop" />
+    <detailbotbar @addCart="addCart"></detailbotbar>
   </div>
 
 </template>
@@ -27,6 +28,7 @@ import detailshopinfo from "@/views/detail/childcomps/detailshopinfo";
 import detailmageinfo from "@/views/detail/childcomps/detailmageinfo";
 import detailparmsinfo from "@/views/detail/childcomps/detailparmsinfo";
 import datailcommentinfo from "@/views/detail/childcomps/datailcommentinfo";
+import detailbotbar from "@/views/detail/childcomps/detailbotbar";
 
 import Scroll from "@/components/common/scroll/Scroll";
 import goods from "@/components/content/goods/goods";
@@ -46,7 +48,8 @@ export default {
     datailcommentinfo,
     Scroll,
     goods,
-    backtop
+    backtop,
+    detailbotbar
   },
   data(){
     return{
@@ -58,7 +61,8 @@ export default {
       detailinfo: {},
       paraminfo: {},
       commentinfo: [],
-      recommends: []
+      recommends: [],
+      currentIndex:0
     }
   },
   created() {
@@ -67,7 +71,7 @@ export default {
     getDetail(this.iid).then( res=>{
       const data = res.result
       this.topimage = data.itemInfo.topImages
-      this.goods = new goodsinfo(data.itemInfo,data.columns,data.shopInfo)
+      this.goodsinfo = new goodsinfo(data.itemInfo,data.columns,data.shopInfo)
       this.shop = new info(data.shopInfo)
       this.detailinfo = data.detailInfo
       this.paraminfo = new param(data.itemParams.info, data.itemParams.rule)
@@ -78,7 +82,6 @@ export default {
 
     getrecommend().then( res=>{
       this.recommends = res.data.list
-      console.log(this.recommends);
     })
   },
   methods: {
@@ -114,10 +117,10 @@ export default {
     addCart() {
       // 获取购物车需要展示的信息
       const product = {}
-      product.image = this.topBnner[0];
-      product.title = this.goods.title;
-      product.desc = this.goods.discountDesc;
-      product.price = this.goods.lowNowPrice;
+      product.image = this.topimage[0];
+      product.title = this.goodsinfo.title;
+      product.desc = this.goodsinfo.discount;
+      product.price = this.goodsinfo.realprice;
       product.iid = this.iid;
 
       //将商品添加到购物车里
